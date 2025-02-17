@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Generate a music playlist based on your mood using Spotify API.">
+    <meta name="author" content="Danny Alonzo">
+    <title>Music Mood Playlist Generator</title>
+    
+    <!-- Link to external CSS -->
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+    <!-- Main Header -->
+    <header>
+        <h1>Music Mood Playlist Generator</h1>
+        <p>Select a mood to get your playlist and YouTube videos!</p>
+    </header>
+
+    <!-- Mood Selection Section -->
+    <main>
+        <section id="mood-selector">
+            <h2>Select Your Mood</h2>
+            <div>
+                <button class="mood-btn" data-mood="happy">Happy</button>
+                <button class="mood-btn" data-mood="sad">Sad</button>
+                <button class="mood-btn" data-mood="energetic">Energetic</button>
+                <button class="mood-btn" data-mood="relaxed">Relaxed</button>
+            </div>
+            <input type="text" id="custom-mood" placeholder="Enter a custom mood">
+            <button id="generate-btn">Generate Playlist</button>
+        </section>
+
+        <!-- Playlist Results Section -->
+        <section id="playlist-container">
+            <h2>Playlist Results</h2>
+            <div id="playlist-results"></div>
+
+            <div id="youtube-container"></div> <!-- YouTube Videos Section -->
+        </section>
+    </main>
+
+    <!-- JavaScript -->
+    <script src="js/main.js"></script>
+</body>
+</html>

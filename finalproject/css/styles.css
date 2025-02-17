@@ -1,0 +1,187 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+/* General Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    background: linear-gradient(135deg, #1db954, #191414);
+    color: white;
+    text-align: center;
+    padding: 20px;
+}
+
+/* Header */
+header h1 {
+    font-size: 2.5rem;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+/* Mood Selector */
+#mood-selector {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    width: 80%;
+    max-width: 500px;
+    margin: auto;
+}
+
+#mood-selector h2 {
+    margin-bottom: 15px;
+    font-size: 1.8rem;
+}
+
+/* Mood Buttons */
+.mood-btn {
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: white;
+    font-size: 1rem;
+    padding: 12px 20px;
+    margin: 8px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+}
+
+.mood-btn:hover {
+    background: rgba(255, 255, 255, 0.4);
+    transform: scale(1.05);
+}
+
+/* Custom Mood Input */
+#custom-mood {
+    width: 80%;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 8px;
+    border: none;
+    outline: none;
+    text-align: center;
+}
+
+/* Generate Button */
+#generate-btn {
+    background: #1db954;
+    border: none;
+    color: white;
+    font-size: 1rem;
+    padding: 12px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+}
+
+#generate-btn:hover {
+    background: #17a347;
+    transform: scale(1.05);
+}
+
+/* Playlist Section */
+#playlist-container {
+    margin-top: 30px;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    width: 90%;
+    max-width: 800px;
+    margin: auto;
+}
+
+#playlist-container h2 {
+    font-size: 1.8rem;
+    margin-bottom: 15px;
+}
+
+/* Playlist Results */
+#playlist-results {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 10px;
+}
+
+/* Song Cards */
+.song-card {
+    background: rgba(255, 255, 255, 0.2);
+    padding: 15px;
+    border-radius: 12px;
+    width: 200px;
+    text-align: center;
+    transition: transform 0.3s ease-in-out;
+}
+
+.song-card:hover {
+    transform: scale(1.05);
+}
+
+.song-card img {
+    width: 100%;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.song-card h3 {
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.song-card p {
+    font-size: 0.9rem;
+    opacity: 0.8;
+}
+
+/* Spotify Button */
+.spotify-btn {
+    display: inline-block;
+    background: #1db954;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 0.9rem;
+    margin-top: 10px;
+}
+
+.spotify-btn:hover {
+    background: #17a347;
+}
+/* YouTube Video Styles */
+.video-card {
+    margin-top: 10px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.video-card img {
+    max-width: 100%;
+    border-radius: 10px;
+}
+
+.video-card a {
+    text-decoration: none;
+    color: #1DB954;
+    font-weight: bold;
+}
+
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .mood-btn {
+        width: 100%;
+    }
+
+    #playlist-results {
+        flex-direction: column;
+        align-items: center;
+    }
+}
