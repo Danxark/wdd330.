@@ -6,7 +6,7 @@ let accessToken = "";
 // YouTube API Key (Replace with your actual YouTube API key)
 const YOUTUBE_API_KEY = "AIzaSyApqciP0pFplK76zr_6K5jQS6LekxDoOIE";
 
-// Function to Get Spotify Access Token
+// Get Spotify Access Token
 async function getAccessToken() {
     const response = await fetch("https://accounts.spotify.com/api/token", {
         method: "POST",
@@ -20,59 +20,50 @@ async function getAccessToken() {
     accessToken = data.access_token;
 }
 
-// Function to Fetch YouTube Videos Based on Mood
-async function getYouTubeVideos(mood) {
-    const url = `https://www.googleapis.com/youtube/v3/search?key=${YOUTUBE_API_KEY}&q=${mood} music&part=snippet&type=video&maxResults=3`;
-    const response = await fetch(url);
-    const data = await response.json();
-
-    if (data.items.length > 0) {
-        displayYouTubeVideos(data.items);
-    }
-}
-
-// Display YouTube Videos
-function displayYouTubeVideos(videos) {
-    const youtubeContainer = document.getElementById("youtube-container");
-    youtubeContainer.innerHTML = ""; // Clear previous results
-
-    videos.forEach(video => {
-        const videoId = video.id.videoId;
-        const videoTitle = video.snippet.title;
-        const videoThumbnail = video.snippet.thumbnails.medium.url;
-
-        const videoCard = document.createElement("div");
-        videoCard.classList.add("video-card");
-        videoCard.innerHTML = `
-            <img src="${videoThumbnail}" alt="${videoTitle}">
-            <h3>${videoTitle}</h3>
-            <a href="https://www.youtube.com/watch?v=${videoId}" target="_blank">Watch on YouTube</a>
-        `;
-        
-        youtubeContainer.appendChild(videoCard);
-    });
-}
-
-// Fetch Playlist & Display Songs
+// Function to Fetch Playlist Based on Mood
 async function fetchPlaylist(mood) {
-    const url = `https://api.spotify.com/v1/search?q=${mood}&type=playlist&limit=1`;
-    const response = await fetch(url, { headers: { Authorization: `Bearer ${accessToken}` } });
+    const moodMap = {
+        happy: "party",
+        sad: "sad",
+        energetic: "workout",
+        relaxed: "chill"
+    };
+
+    const query = moodMap[mood] || mood; // Use predefined moods or custom user input
+    const url = `https://api.spotify.com/v1/search?q=${query}&type=playlist&limit=1`;
+
+    const response = await fetch(url, {
+        method: "GET",
+        headers: {
+            Authorization: `Bearer ${accessToken}`,
+        },
+    });
+
     const data = await response.json();
     if (data.playlists.items.length > 0) {
-        fetchTracks(data.playlists.items[0].id);
-        getYouTubeVideos(mood);  // Fetch YouTube videos based on the mood
+        const playlistId = data.playlists.items[0].id;
+        fetchPlaylistTracks(playlistId);
+    } else {
+        document.getElementById("playlist-results").innerHTML = `<p>No playlist found for "${mood}".</p>`;
     }
 }
 
-// Fetch and Display Tracks
-async function fetchTracks(playlistId) {
+// Function to Fetch Tracks from Playlist
+async function fetchPlaylistTracks(playlistId) {
     const url = `https://api.spotify.com/v1/playlists/${playlistId}/tracks`;
-    const response = await fetch(url, { headers: { Authorization: `Bearer ${accessToken}` } });
+
+    const response = await fetch(url, {
+        method: "GET",
+        headers: {
+            Authorization: `Bearer ${accessToken}`,
+        },
+    });
+
     const data = await response.json();
     displaySongs(data.items);
 }
 
-// Display Songs (with Spotify Link if no preview)
+// Function to Display Songs on the Page
 function displaySongs(tracks) {
     const playlistContainer = document.getElementById("playlist-results");
     playlistContainer.innerHTML = ""; // Clear previous results
@@ -105,14 +96,57 @@ function displaySongs(tracks) {
     });
 }
 
-// Handle Mood Button Click
-function handleMoodSelection(mood) {
-    fetchPlaylist(mood);
+// Function to Fetch YouTube Videos Based on Mood
+async function getYouTubeVideos(mood) {
+    const url = `https://www.googleapis.com/youtube/v3/search?key=${YOUTUBE_API_KEY}&q=${mood} music&part=snippet&type=video&maxResults=3`;
+    const response = await fetch(url);
+    const data = await response.json();
+
+    if (data.items.length > 0) {
+        displayYouTubeVideos(data.items);
+    } else {
+        document.getElementById("youtube-results").innerHTML = `<p>No videos found for "${mood}".</p>`;
+    }
+}
+
+// Function to Display YouTube Videos on the Page
+function displayYouTubeVideos(videos) {
+    const youtubeContainer = document.getElementById("youtube-results");
+    youtubeContainer.innerHTML = ""; // Clear previous results
+
+    videos.forEach(video => {
+        const videoId = video.id.videoId;
+        const videoTitle = video.snippet.title;
+        const videoThumbnail = video.snippet.thumbnails.medium.url;
+
+        const videoCard = document.createElement("div");
+        videoCard.classList.add("video-card");
+        videoCard.innerHTML = `
+            <img src="${videoThumbnail}" alt="${videoTitle}">
+            <h3>${videoTitle}</h3>
+            <a href="https://www.youtube.com/watch?v=${videoId}" target="_blank">Watch on YouTube</a>
+        `;
+        
+        youtubeContainer.appendChild(videoCard);
+    });
 }
 
 // Event Listeners for Mood Buttons
-document.querySelectorAll(".mood-btn").forEach(button => 
-    button.addEventListener("click", () => handleMoodSelection(button.dataset.mood))
-);
+document.querySelectorAll(".mood-btn").forEach(button => {
+    button.addEventListener("click", () => {
+        fetchPlaylist(button.dataset.mood);
+        getYouTubeVideos(button.dataset.mood);
+    });
+});
 
+// Event Listener for Custom Mood Input
+document.getElementById("generate-btn").addEventListener("click", () => {
+    const moodInput = document.getElementById("custom-mood").value.trim();
+    if (moodInput) {
+        fetchPlaylist(moodInput);
+        getYouTubeVideos(moodInput);
+    }
+});
+
+// Get Spotify Token on Page Load
 window.onload = getAccessToken;
