@@ -1,12 +1,12 @@
-// Spotify API Credentials (Replace with your actual credentials)
+// Spotify API Credentials
 const CLIENT_ID = "c2249a3c98fc40c09d4f791dd4bcbaaa";
 const CLIENT_SECRET = "c4d54f70d0c5449e81d8693ac632d643";
 let accessToken = "";
 
-// YouTube API Key (Replace with your actual YouTube API key)
+// YouTube API Key 
 const YOUTUBE_API_KEY = "AIzaSyApqciP0pFplK76zr_6K5jQS6LekxDoOIE";
 
-// Get Spotify Access Token
+//Spotify Access Token
 async function getAccessToken() {
     const response = await fetch("https://accounts.spotify.com/api/token", {
         method: "POST",
@@ -20,7 +20,7 @@ async function getAccessToken() {
     accessToken = data.access_token;
 }
 
-// Function to Fetch Playlist Based on Mood
+// Fetch Playlist Based on Mood
 async function fetchPlaylist(mood) {
     const moodMap = {
         happy: "party",
@@ -29,7 +29,7 @@ async function fetchPlaylist(mood) {
         relaxed: "chill"
     };
 
-    const query = moodMap[mood] || mood; // Use predefined moods or custom user input
+    const query = moodMap[mood] || mood; // predefined moods or custom user input
     const url = `https://api.spotify.com/v1/search?q=${query}&type=playlist&limit=1`;
 
     const response = await fetch(url, {
@@ -48,7 +48,7 @@ async function fetchPlaylist(mood) {
     }
 }
 
-// Function to Fetch Tracks from Playlist
+// Fetch Tracks from Playlist
 async function fetchPlaylistTracks(playlistId) {
     const url = `https://api.spotify.com/v1/playlists/${playlistId}/tracks`;
 
@@ -63,7 +63,7 @@ async function fetchPlaylistTracks(playlistId) {
     displaySongs(data.items);
 }
 
-// Function to Display Songs on the Page
+// Display Songs on the Page
 function displaySongs(tracks) {
     const playlistContainer = document.getElementById("playlist-results");
     playlistContainer.innerHTML = ""; // Clear previous results
@@ -78,7 +78,7 @@ function displaySongs(tracks) {
         const trackName = track.track.name;
         const trackArtists = track.track.artists.map(artist => artist.name).join(", ");
         const trackPreview = track.track.preview_url;
-        const trackLink = track.track.external_urls.spotify; // Full track link
+        const trackLink = track.track.external_urls.spotify; // Full track link, spotify not allow to reproduce more than 30 sec in a diferent browser.
 
         songCard.innerHTML = `
             <img src="${trackImage}" alt="${trackName}">
@@ -96,7 +96,7 @@ function displaySongs(tracks) {
     });
 }
 
-// Function to Fetch YouTube Videos Based on Mood
+// Fetch YouTube Videos Based on Mood
 async function getYouTubeVideos(mood) {
     const url = `https://www.googleapis.com/youtube/v3/search?key=${YOUTUBE_API_KEY}&q=${mood} music&part=snippet&type=video&maxResults=3`;
     const response = await fetch(url);
@@ -109,7 +109,7 @@ async function getYouTubeVideos(mood) {
     }
 }
 
-// Function to Display YouTube Videos on the Page
+// Display YouTube Videos on the Page
 function displayYouTubeVideos(videos) {
     const youtubeContainer = document.getElementById("youtube-results");
     youtubeContainer.innerHTML = ""; // Clear previous results
@@ -139,7 +139,7 @@ document.querySelectorAll(".mood-btn").forEach(button => {
     });
 });
 
-// Event Listener for Custom Mood Input
+// Event Listener for Custom Mood Inputs
 document.getElementById("generate-btn").addEventListener("click", () => {
     const moodInput = document.getElementById("custom-mood").value.trim();
     if (moodInput) {
