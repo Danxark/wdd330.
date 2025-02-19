@@ -148,5 +148,12 @@ document.getElementById("generate-btn").addEventListener("click", () => {
     }
 });
 
+// Save mood and playlist to Local Storage
+function saveToLocalStorage(mood, playlist) {
+    localStorage.setItem("lastMood", mood);
+    localStorage.setItem("lastPlaylist", JSON.stringify(playlist));
+}
+
 // Get Spotify Token on Page Load
 window.onload = getAccessToken;
+
