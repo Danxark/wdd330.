@@ -6,6 +6,7 @@ let accessToken = "";
 // YouTube API Key 
 const YOUTUBE_API_KEY = "AIzaSyApqciP0pFplK76zr_6K5jQS6LekxDoOIE";
 
+
 //Spotify Access Token
 async function getAccessToken() {
     const response = await fetch("https://accounts.spotify.com/api/token", {
@@ -42,14 +43,14 @@ async function fetchPlaylist(mood) {
     const data = await response.json();
     if (data.playlists.items.length > 0) {
         const playlistId = data.playlists.items[0].id;
-        fetchPlaylistTracks(playlistId);
+        fetchPlaylistTracks(playlistId, mood, data.playlists.items[0]);
     } else {
         document.getElementById("playlist-results").innerHTML = `<p>No playlist found for "${mood}".</p>`;
     }
 }
 
 // Fetch Tracks from Playlist
-async function fetchPlaylistTracks(playlistId) {
+async function fetchPlaylistTracks(playlistId, mood, playlist) {
     const url = `https://api.spotify.com/v1/playlists/${playlistId}/tracks`;
 
     const response = await fetch(url, {
@@ -61,9 +62,10 @@ async function fetchPlaylistTracks(playlistId) {
 
     const data = await response.json();
     displaySongs(data.items);
+    saveToLocalStorage(mood, playlist);  // Save playlist and mood to localStorage
 }
 
-// Display Songs on the Page
+// Display Songs 
 function displaySongs(tracks) {
     const playlistContainer = document.getElementById("playlist-results");
     playlistContainer.innerHTML = ""; // Clear previous results
@@ -109,7 +111,7 @@ async function getYouTubeVideos(mood) {
     }
 }
 
-// Display YouTube Videos on the Page
+// Display YouTube videos on the page
 function displayYouTubeVideos(videos) {
     const youtubeContainer = document.getElementById("youtube-results");
     youtubeContainer.innerHTML = ""; // Clear previous results
@@ -131,7 +133,7 @@ function displayYouTubeVideos(videos) {
     });
 }
 
-// Event Listeners for Mood Buttons
+// Event Listeners for Mood buttons
 document.querySelectorAll(".mood-btn").forEach(button => {
     button.addEventListener("click", () => {
         fetchPlaylist(button.dataset.mood);
@@ -139,7 +141,7 @@ document.querySelectorAll(".mood-btn").forEach(button => {
     });
 });
 
-// Event Listener for Custom Mood Inputs
+// Event Listener for Custom Mood inputs
 document.getElementById("generate-btn").addEventListener("click", () => {
     const moodInput = document.getElementById("custom-mood").value.trim();
     if (moodInput) {
@@ -148,15 +150,28 @@ document.getElementById("generate-btn").addEventListener("click", () => {
     }
 });
 
-
 // Get Spotify Token on Page Load
-window.onload = getAccessToken;
+window.onload = () => {
+    getAccessToken();
+    loadFromLocalStorage(); // Load from localStorage if available
+};
 
 function saveToLocalStorage(mood, playlist) {
+    // Save multiple properties to localStorage
     localStorage.setItem("lastMood", mood);
     localStorage.setItem("lastPlaylist", JSON.stringify(playlist));
-    
-    // Debugging: Check if Local Storage is updated
+
+    // Check if Local Storage is updated
     console.log("Saved to Local Storage:", { mood, playlist });
 }
 
+function loadFromLocalStorage() {
+    const lastMood = localStorage.getItem("lastMood");
+    const lastPlaylist = localStorage.getItem("lastPlaylist");
+
+    if (lastMood && lastPlaylist) {
+        const playlist = JSON.parse(lastPlaylist);
+        fetchPlaylist(lastMood);  // Fetch the saved playlist
+        displaySongs(playlist.tracks);  // Display the saved playlist tracks
+    }
+}
